@@ -1,0 +1,78 @@
+spring:
+  application:
+    name: review
+
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${POSTGRES_DB:ecommerce}?currentSchema=review
+    username: ${DB_USERNAME:ecommerce}
+    password: ${DB_PASSWORD:secret}
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        default_schema: review
+        format_sql: true
+    show-sql: false
+
+  liquibase:
+    enabled: true
+    change-log: classpath:db/review/changelog/db.changelog-master.xml
+    default-schema: review
+
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:kafka:9092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.add.type.headers: false
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: com.ecommerce.*,com.company.orderapi.*
+        spring.json.use.type.headers: false
+        spring.json.value.default.type: com.ecommerce.review.event.OrderPlacedEvent
+      enable-auto-commit: false
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          secret: ${JWT_SECRET:dev-secret-change-me-please-at-least-32chars-long-123}
+
+  threads:
+    virtual:
+      enabled: true
+
+  lifecycle:
+    timeout-per-shutdown-phase: 20s
+
+server:
+  port: 8086
+  shutdown: graceful
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  endpoint:
+    health:
+      show-details: when-authorized
+
+app:
+  internal:
+    api-key: ${INTERNAL_API_KEY:internal-service-key-12345}
+  jwt:
+    secret: ${JWT_SECRET:dev-secret-change-me-please-at-least-32chars-long-123}
+  kafka:
+    enabled: true
+    topics:
+      order-placed: order.placed
+      review-created: review.created
