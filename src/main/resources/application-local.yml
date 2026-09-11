@@ -39,6 +39,9 @@ spring:
         spring.json.use.type.headers: false
         spring.json.value.default.type: com.ecommerce.review.event.OrderPlacedEvent
       enable-auto-commit: false
+    listener:
+      # Required: OrderPlacedConsumer takes an Acknowledgment argument
+      ack-mode: manual_immediate
 
   security:
     oauth2:

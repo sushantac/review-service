@@ -36,7 +36,9 @@ class SecurityConfig(
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .authorizeHttpRequests { auth ->
                 auth
-                    .requestMatchers(HttpMethod.GET, "/api/v1/products/**/reviews/**")
+                    .requestMatchers(HttpMethod.GET, "/api/v1/products/*/reviews")
+                    .permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/v1/products/*/reviews/**")
                     .permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/v1/reviews/*")
                     .permitAll()

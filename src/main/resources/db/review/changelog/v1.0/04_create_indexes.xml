@@ -10,8 +10,8 @@
         <createIndex tableName="reviews" schemaName="review" indexName="idx_reviews_user_id">
             <column name="user_id"/>
         </createIndex>
-        <createIndex tableName="reviews" schemaName="review" indexName="idx_reviews_approved_created">
-            <column name="approved"/>
+        <createIndex tableName="reviews" schemaName="review" indexName="idx_reviews_status_created">
+            <column name="status"/>
             <column name="created_at"/>
         </createIndex>
         <createIndex tableName="verified_purchases" schemaName="review" indexName="idx_verified_purchases_user_product">
